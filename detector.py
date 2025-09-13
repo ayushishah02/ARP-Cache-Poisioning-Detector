@@ -32,14 +32,14 @@ def analyze_packets(packets):
                 "type": "INCONSISTENT_BINDING",
                 "ip": ip,
                 "macs": list(macs),
-                "msg": f"Multiple MACs claim {ip}"
+                "msg": f"Multiple MACs claim {ip}",
             })
 
     if gratuitous > 10:
         alerts.append({
             "type": "EXCESSIVE_GRATUITOUS_ARP",
             "count": gratuitous,
-            "msg": "High volume of gratuitous ARP observed"
+            "msg": "High volume of gratuitous ARP observed",
         })
 
     df = pd.DataFrame(
@@ -48,7 +48,7 @@ def analyze_packets(packets):
     summary = {
         "unique_ips": len(df),
         "hosts_observed": df.to_dict(orient="records"),
-        "gratuitous_count": gratuitous
+        "gratuitous_count": gratuitous,
     }
     return summary, alerts
 
@@ -76,12 +76,7 @@ def main():
         "summary": summary,
         "alerts": alerts,
     }
-    print(
-        json.dumps(
-            out,
-            indent=2
-        )
-    )
+    print(json.dumps(out, indent=2))
 
 
 if __name__ == "__main__":
