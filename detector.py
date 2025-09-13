@@ -76,8 +76,10 @@ def main():
         "summary": summary,
         "alerts": alerts,
     }
-    print(json.dumps(out, indent=2))
 
-
-if __name__ == "__main__":
-    main()
+    print(
+        json.dumps(
+            out,
+            indent=2,
+        )
+    )
