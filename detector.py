@@ -1,9 +1,18 @@
-import argparse, json, time
+import argparse
+import json
+import time
 from collections import defaultdict
+
 from scapy.all import rdpcap, sniff, ARP
 import pandas as pd
 
+
 def analyze_packets(packets):
+    """
+    Detect ARP spoofing:
+      - Multiple MACs claiming the same IP
+      - Excessive gratuitous ARPs
+    """
     ip_to_macs = defaultdict(set)
     gratuitous = 0
     alerts = []
@@ -12,9 +21,9 @@ def analyze_packets(packets):
         if not p.haslayer(ARP):
             continue
         arp = p[ARP]
-        if arp.op in (1, 2):
+        if arp.op in (1, 2):  # who-has / is-at
             ip_to_macs[arp.psrc].add(arp.hwsrc)
-            if arp.psrc == arp.pdst:
+            if arp.psrc == arp.pdst:  # gratuitous
                 gratuitous += 1
 
     for ip, macs in ip_to_macs.items():
@@ -33,7 +42,9 @@ def analyze_packets(packets):
             "msg": "High volume of gratuitous ARP observed"
         })
 
-    df = pd.DataFrame([{"ip": ip, "macs": list(m)} for ip, m in ip_to_macs.items()])
+    df = pd.DataFrame(
+        [{"ip": ip, "macs": list(m)} for ip, m in ip_to_macs.items()]
+    )
     summary = {
         "unique_ips": len(df),
         "hosts_observed": df.to_dict(orient="records"),
@@ -41,12 +52,14 @@ def analyze_packets(packets):
     }
     return summary, alerts
 
+
 def load_packets(pcap_path=None, live=False, iface=None, timeout=10):
     if pcap_path:
         return rdpcap(pcap_path)
     if live:
         return sniff(iface=iface, timeout=timeout, filter="arp")
     return []
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -60,6 +73,7 @@ def main():
     summary, alerts = analyze_packets(packets)
     out = {"ts": int(time.time()), "summary": summary, "alerts": alerts}
     print(json.dumps(out, indent=2))
+
 
 if __name__ == "__main__":
     main()
