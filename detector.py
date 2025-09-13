@@ -32,7 +32,9 @@ def analyze_packets(packets):
                 "type": "INCONSISTENT_BINDING",
                 "ip": ip,
                 "macs": list(macs),
-                "msg": "Multiple MACs claim {}".format(ip),
+                "msg": (
+                    "Multiple MACs claim {}".format(ip)
+                ),
             })
 
     if gratuitous > 10:
