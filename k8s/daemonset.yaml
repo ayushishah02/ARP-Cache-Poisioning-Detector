@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: arp-detector
+spec:
+  selector:
+    matchLabels:
+      app: arp-detector
+  template:
+    metadata:
+      labels:
+        app: arp-detector
+    spec:
+      hostNetwork: true
+      containers:
+      - name: detector
+        image: ghcr.io/youruser/arp-detector:latest
+        args: ["--live", "--timeout", "20"]
+        securityContext:
+          capabilities:
+            add: ["NET_RAW"]
