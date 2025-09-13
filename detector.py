@@ -71,8 +71,17 @@ def main():
 
     packets = load_packets(args.pcap, args.live, args.iface, args.timeout)
     summary, alerts = analyze_packets(packets)
-    out = {"ts": int(time.time()), "summary": summary, "alerts": alerts}
-    print(json.dumps(out, indent=2))
+    out = {
+        "ts": int(time.time()),
+        "summary": summary,
+        "alerts": alerts,
+    }
+    print(
+        json.dumps(
+            out,
+            indent=2
+        )
+    )
 
 
 if __name__ == "__main__":
