@@ -32,7 +32,7 @@ def analyze_packets(packets):
                 "type": "INCONSISTENT_BINDING",
                 "ip": ip,
                 "macs": list(macs),
-                "msg": f"Multiple MACs claim {ip}",
+                "msg": "Multiple MACs claim {}".format(ip),
             })
 
     if gratuitous > 10:
@@ -83,3 +83,7 @@ def main():
             indent=2,
         )
     )
+
+
+if __name__ == "__main__":
+    main()
