@@ -42,7 +42,8 @@ def analyze_packets(packets):
             "type": "EXCESSIVE_GRATUITOUS_ARP",
             "count": gratuitous,
             "msg": (
-                "High volume of gratuitous ARP observed"
+                "High volume of "
+                "gratuitous ARP observed"
             ),
         })
 
