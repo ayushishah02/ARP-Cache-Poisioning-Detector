@@ -41,7 +41,9 @@ def analyze_packets(packets):
         alerts.append({
             "type": "EXCESSIVE_GRATUITOUS_ARP",
             "count": gratuitous,
-            "msg": "High volume of gratuitous ARP observed",
+            "msg": (
+                "High volume of gratuitous ARP observed"
+            ),
         })
 
     df = pd.DataFrame(
